@@ -1,6 +1,6 @@
 # Domestic Near Real-Time Interbank Credit Transfers in Vietnam (applicable for low-value transactions)
 
-This document describes the business and technical flow for domestic near-real-time interbank credit transfers in Vietnam, facilitated by the National Payment Corporation of Vietnam (NAPAS) using a Near Real-Time (NRT) Automated Clearing House (ACH) model. Final settlement occurs at the State Bank of Vietnam (SBV). The system supports transfers **up to less than *500 million VND per transaction**, operating 24/7.
+This document describes the business and technical flow for domestic near-real-time interbank credit transfers in Vietnam, facilitated by the National Payment Corporation of Vietnam (NAPAS) using a Near Real-Time (NRT) Automated Clearing House (ACH) model. Final settlement occurs at the State Bank of Vietnam (SBV). The system supports transfers **up to less than 500 million VND per transaction**, operating 24/7.
 
 ## Overview
 
