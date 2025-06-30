@@ -10,6 +10,8 @@ NIEPS employs a Real-Time Gross Settlement (RTGS) model, ensuring immediate and 
 
 NIEPS is the cornerstone of Vietnam’s high-value payment infrastructure, managed by the SBV and succeeding the older Inter-Bank Electronic Payment System (IBPS). It operates on an RTGS model, where each payment is settled individually and in real-time. This process is final and irrevocable, which is critical for eliminating interbank settlement risk in large-value transactions.
 
+![High-level flow for domestic high-value interbank credit transfers in Vietnam](../media/domestic_high_value_interbank_payment_overview.jpg)
+
 **Key Characteristics**
 - **Threshold**: Mandatory for VND transactions >= 500 million, urgent payments of any value, and all foreign currency transfers.
 - **Settlement Model**: Real-Time Gross Settlement (RTGS).
@@ -31,23 +33,24 @@ NIEPS is the cornerstone of Vietnam’s high-value payment infrastructure, manag
 
 ## Technical Flow
 
+![Detailed sequence diagram for domestic high-value interbank credit transfers in Vietnam](../media/domestic_high_value_interbank_payment_flow.jpg)
+
 The table below outlines the step-by-step flow of a high-value RTGS transaction, including technical details, compliance requirements, and failure cases.
 
-| Step                          | Description                                                                                                                                   | Compliance, Risks, and Failure Cases                                                                                   |
-|-------------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------|-----------------------------------------------------------------------------------------------------------------------|
+| Step | Description | Compliance, Risks, and Failure Cases |
+|------|-------------|--------------------------------------|
 | **1. Initiation & Authentication** | The sender initiates a transfer of >= 500M VND via the issuing bank’s online portal or branch. The bank authenticates using robust methods (e.g., biometrics, OTP). | **Compliance**: Per Decision No. 2345/QD-NHNN (effective July 1, 2024), biometric authentication is mandatory for online transactions > VND 10M or cumulative daily transactions > VND 20M.<br>**Failure Case**: Transaction blocked if authentication fails. |
-| **2. Validation & Liquidity Check** | The issuing bank validates the payment instruction (compliance, risk parameters) and confirms sufficient funds in its SBV settlement account. For paper-based instructions, a "three-person rule" applies: creator, controller, and approver, each applying a digital signature. | **Compliance**: Adheres to Circular 08/2024/TT-NHNN for the three-person rule and digital signatures.<br>**Failure Case**: Rejected if compliance fails or funds are insufficient. |
+| **2. Validation & Liquidity Check** | The issuing bank validates the payment instruction (compliance, risk parameters) and confirms sufficient funds in its SBV settlement account. A "three-person rule" applies: creator, controller, and approver, each applying a digital signature. | **Compliance**: Adheres to Circular 08/2024/TT-NHNN for the three-person rule and digital signatures.<br>**Failure Case**: Rejected if compliance fails or funds are insufficient. |
 | **3. Payment Instruction to NIEPS** | The issuing bank creates a payment order and transmits it to the NIEPS National Payment Service Center (NPSC). | **Technical Details**: Uses proprietary SBV formats, transitioning to ISO 20022 `pacs.009`. Sent over secure channels (VPN, TLS 1.2+).<br>**Non-Functional Requirements**: NPSC ensures >99.95% availability. |
-| **4. Real-Time Gross Settlement** | The NPSC validates the order (signatures, format). If funds suffice, SBV debits the issuing bank’s account and credits the receiving bank’s account. Settlement is final and irrevocable. | **Failure Case**: If funds are insufficient, the payment is queued (FIFO) until liquidity improves or is canceled (by the issuing bank or SBV at EOD).<br>**Gridlock Resolution**: Includes bypass FIFO, reordering, and cancellation. |
-| **5. Confirmation & Notification** | NIEPS sends a confirmation to both banks, confirming interbank transfer completion. | **Technical Details**: Uses ISO 20022 `pacs.002` (future state) for status updates.<br>**Failure Case**: None; failures handled in step 4. |
+| **4. Real-Time Gross Settlement** | The NPSC validates the order (signatures, format). If funds suffice, SBV debits the issuing bank’s account and credits the receiving bank’s account. Settlement is final and irrevocable. | **Failure Case**: If funds are insufficient, the payment is queued until liquidity improves or is canceled (by the issuing bank or SBV at EOD).<br>**Gridlock Resolution**: Includes bypass FIFO, reordering, and cancellation. |
+| **5. Confirmation & Notification** | NIEPS sends a confirmation to both banks, confirming interbank transfer completion. | **Technical Details**: Uses ISO 20022 `pacs.002` (future state) for status updates. |
 | **6. Credit Beneficiary** | The receiving bank performs final checks (account status, AML screening) and credits the receiver’s account. | **Compliance**: AML/CFT checks per Law No. 14/2022/QH15; STRs filed if risks detected.<br>**Failure Case**: If checks fail, NIEPS coordinates reversal with the issuing bank. |
 | **7. Reconciliation** | At end-of-day (EOD), banks and SBV perform automated reconciliation to align records and balances. | **Failure Case**: Discrepancies trigger manual investigation. |
 
 ## Queue Management
 
 - **Mechanism**: Centrally managed with a First-In-First-Out (FIFO) principle.
-- **Gridlock Resolution**: Features bypass FIFO, reordering, and cancellation to unlock payments despite sufficient funds.
-- **Monitoring**: Supports queue and settlement account monitoring.
+- **Gridlock Resolution**: To avoid gridlock situation where a large transaction blocks other transactions in the queue, the large transaction can be reordered. A notification is sent to the issuing bank and the bank has 30 minutes to replenish the settlement account.
 - **Cancellation**: Allowed by the issuing bank during the day or by SBV at EOD if unsettled.
 
 ## Differences Between NRT ACH and RTGS
@@ -58,10 +61,10 @@ The table below compares the Near Real-Time Automated Clearing House (NRT ACH) s
 |-----------------------------|-------------------------------------------------|--------------------------------------------------|
 | **Transaction Value**       | < VND 500M per transaction                      | >= VND 500M, urgent payments, or FX transfers    |
 | **Settlement Model**        | Near Real-Time with Deferred Net Settlement     | Real-Time Gross Settlement                       |
-| **Processing**              | Batches transactions, nets positions            | Individual, real-time settlement                 |
+| **Processing**              | Batches transactions, nets positions            | Individual, real-time settlement (FIFO)          |
 | **Operating Hours**         | 24/7                                            | Strict business hours with cut-off times         |
 | **Latency**                 | Near real-time (seconds)                        | Immediate (real-time)                            |
-| **Queue Management**        | Rejects if liquidity fails                      | FIFO queue with gridlock resolution              |
+| **Queue Management**        | Rejects if liquidity fails                      | Requeues if liquidity fails. Can be cancelled by the issuing bank during the day or by SBV at EOD if unsettled. |
 | **Messaging**               | ISO 20022 (`pacs.008`, `pacs.002`)              | Transitioning to ISO 20022 (`pacs.009`, `camt`)  |
 | **Use Case**                | Low-value retail payments (e.g., P2P transfers) | High-value, time-critical payments               |
 | **Liquidity Requirement**   | Sufficient funds in SBV settlement account      | Sufficient funds in SBV settlement account       |
@@ -72,3 +75,7 @@ The table below compares the Near Real-Time Automated Clearing House (NRT ACH) s
 - **Messaging**: Support both legacy SBV formats and ISO 20022 to accommodate the transition.
 - **Security**: Implement biometric authentication per Decision No. 2345/QD-NHNN for online transactions.
 - **Source of Truth**: Consult the partner bank’s technical specifications for exact file formats, API endpoints, and security protocols.
+
+## References
+- [Circular 08/2024/TT-NHNN](https://thuviennhadat.vn/van-ban-phap-luat-viet-nam/circular-08-2024-tt-nhnn-management-of-the-national-interbank-electronic-payment-system-617833.html)
+- [E-payment System Introduction Of Large Value Payment System](https://www.slideshare.net/slideshow/e-payment-system-introduction-of-large-value-payment-system/1473296)

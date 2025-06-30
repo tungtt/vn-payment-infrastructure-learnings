@@ -9,7 +9,7 @@ The NRT ACH model enables rapid interbank transfers, distinct from deferred net-
 ## Actors
 **Scenario**: Hưng (sender) uses Bank A’s mobile banking app to transfer funds to Phương (recipient) at Bank B.
 
-![High-level flow for domestic near-real-time interbank credit transfers in Vietnam](../media/Domestic%20Interbank%20Credit%20Transfer%20(low-value%20transactions).jpg)
+![High-level flow for domestic low-value interbank credit transfers in Vietnam](../media/domestic_low_value_interbank_payment_overview.jpg)
 
 | Actor | Description |
 |----|----|
@@ -22,12 +22,12 @@ The NRT ACH model enables rapid interbank transfers, distinct from deferred net-
 
 ## Technical Flow
 
-![Detailed sequence diagram for domestic near-real-time interbank credit transfers in Vietnam](../media/Domestic%20Interbank%20Credit%20Transfer%20(low-value%20transactions)%20Sequence%20Diagram.jpg)
+![Detailed sequence diagram for domestic near-real-time interbank credit transfers in Vietnam](../media/domestic_low_value_interbank_payment_flow.jpg)
 
 
 | Step | Description | Compliance, Risks, and Failure Cases |
 |------|-------------|-------------------------------------|
-| **1. Initiation & Authentication** | Hưng initiates a transfer to Phương via Bank A’s mobile banking app, providing the recipient’s bank, account number, amount, and remarks. Hưng authenticates using Bank A’s required MFA (e.g., biometrics, OTP). | No specific compliance or risk checks at this step. |
+| **1. Initiation & Authentication** | Hưng initiates a transfer to Phương via Bank A’s mobile banking app, providing the recipient’s bank, account number, amount, and remarks. Hưng authenticates using Bank A’s required MFA (e.g., biometrics, OTP). | **Compliance**: Per Decision No. 2345/QD-NHNN (effective July 1, 2024), biometric authentication is mandatory for online transactions > VND 10M or cumulative daily transactions > VND 20M.<br>**Failure Case**: Transaction blocked if authentication fails. |
 | **2. Validation & Fund Earmarking** | Bank A’s core banking system verifies Hưng’s account has sufficient funds and places a hold (earmark) on the transaction amount, preventing its use elsewhere. This is an internal ledger operation; funds remain at Bank A. | **Compliance & Risks**: Performs Customer Due Diligence (CDD) against records, screens against internal watchlists and sanctions lists, and conducts device/behavioral analysis for a risk score (per Law No. 14/2022/QH15, Decree No. 19/2023/NĐ-CP). Validates funds and earmarks them.<br>**Failure Case**: Transaction blocked if authentication fails or checks flag high risk (e.g., sanction hit, abnormal behavior). Bank A may file a Suspicious Transaction Report (STR) with SBV. |
 | **3. Payment Instruction to Clearing House** | Bank A sends a payment instruction to NAPAS. | **Technical Details**: Uses ISO 20022 `pacs.008` (FI to FI Payment Credit Transfer) via HTTPS POST over a secure channel (VPN or dedicated line, TLS 1.2+). Authenticates with mutual TLS (mTLS) and OAuth 2.0 bearer token. Message is digitally signed.<br>**Non-Functional Requirements**: NAPAS provides asynchronous acknowledgment within seconds; endpoints maintain >99.95% availability. |
 | **4. Clearing & Routing** | NAPAS receives the `pacs.008` message and performs clearing checks: validates digital signature and format, checks for duplicates (using unique instruction ID), conducts fraud analysis (velocity checks, watchlists, patterns), verifies destination bank and account format, and confirms Bank A’s prefunded balance at SBV covers the amount. If checks pass, NAPAS decrements Bank A’s liquidity, logs a pending credit for Bank B and debit for Bank A, and forwards a settlement instruction to SBV. | **Failure Case**: If checks fail (e.g., invalid signature, suspected fraud, insufficient liquidity), NAPAS rejects the instruction, sends a `pacs.002` (Payment Status Report) with a rejection code to Bank A, and stops the transaction. |
