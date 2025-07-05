@@ -8,39 +8,35 @@ While the repository focuses on key concepts drawn from the author’s learning 
 ## Payment flows
 These are the payment flows that will be discussed in this repository.
 
-### 1. Bank-based Payments
-- **Interbank Transfers**
-  - *Domestic*
-    - [High-value or urgent or foreign-currency transfers (RTGS via NIEPS)](docs/Domestic%20High-Value%20Interbank%20Credit%20Transfers%20(RTGS).markdown)
-    - [Low-value transfers (NRT ACH via NAPAS)](docs/Domestic%20Low-Value%20Interbank%20Credit%20Transfer%20(Near%20Real-Time%20ACH).markdown)
-    - Deferred Net Settlement (DNS via NAPAS)
-  - *International*
-    - SWIFT transfers
-    - Other correspondent banking networks
-- **Card Payments**
-  - Domestic cards (NAPAS)
-  - International cards (Visa, Mastercard, JCB, etc.)
-  - Transactions: POS, ATM, online
+### 1. Interbank Electronic Payment System (IBPS)
+- [High-value or urgent or foreign-currency transfers (RTGS via NIEPS)](docs/Domestic%20High-Value%20Interbank%20Credit%20Transfers%20(RTGS).markdown)
+- [Low-value transfers (NRT ACH via NAPAS)](docs/Domestic%20Low-Value%20Interbank%20Credit%20Transfers%20(Near%20Real-Time%20ACH).markdown)
+- [Batch transfers (DNS via NAPAS)](docs/Domestic%20Batch%20Interbank%20Credit%20Transfers%20(DNS).markdown)
+- QR Code Payments: Consumer-to-Consumer
+- QR Code Payments: Consumer-to-Merchant
 
-### 2. Mobile-based Payments
-- E-wallets (MoMo, ZaloPay, VNPay, etc.)
-  - P2P transfers
-  - Merchant payments
-  - Bill payments
-- QR code payments (VietQR)
-- Mobile Money (telecom-based)
+### 2. Cross-border Payments
+- SWIFT transfers
+- International payment services (e.g., Paypal, Stripe)
+- Other correspondent banking networks
+- Regional payments
 
-### 3. Online Payment Services (e.g., PayPal, Stripe, Ngân Lượng)
+### 3. Card Payments
+- Domestic cards (NAPAS)
+- International cards (Visa, Mastercard, JCB, etc.)
+- Consumer-to-Consumer vs. Consumer-to-Merchant Payments
 
-### 4. Money Transfer Operators (MTOs; e.g., using Western Union, MoneyGram)
+### 4. Digital Wallet Payment (e.g., Momo, ZaloPay, VNPay)
 
-### 5. Cryptocurrency Payments
+### 5. Mobile Money (via Mobile Money Operators)
+
+### 6. Money Service Business (e.g., Western Union, MoneyGram)
+
+### 7. Cryptocurrency Payments
 - Via exchanges (e.g., Binance, Remitano)
 - Via payment gateways (e.g., NOWPayments)
 
-### 6. Other Payment Methods
-- Buy Now, Pay Later (BNPL)
-- Peer-to-Peer (P2P) lending
+### 8. Buy Now Pay Later (BNPL)
 
 ## Key concepts
 
@@ -52,8 +48,8 @@ These are the payment flows that will be discussed in this repository.
 
 ### Key actors
 - Sender / Payer
-- Recipient / Beneficiary
-- Issuing Bank
+- Recipient / Beneficiary / Payee
+- Issuing / Originating Bank
 - Receiving / Acquiring Bank
 - Clearing House
 - Settlement Bank
@@ -66,7 +62,7 @@ These are the payment flows that will be discussed in this repository.
 
 | Settlement Timing/Type | Gross Settlement | Net Settlement |
 |------------------------|------------------|----------------|
-| Real-Time | Real-Time Gross Settlement (RTGS) | *Not applicable* |
+| Real-Time | Real-Time Gross Settlement (RTGS) | *Real-Time Net Settlement (RTNS)* |
 | Near Real-Time | Near Real-Time Gross Settlement (NRT ACH) | *Not applicable* |
 | Deferred (or, Designated) | *Not applicable* | Deferred Net Settlement (DNS) |
 
@@ -80,8 +76,27 @@ These are the payment flows that will be discussed in this repository.
 - Practical settlement models in Vietnam
   - [Real-Time Gross Settlement (RTGS)](docs/Domestic%20High-Value%20Interbank%20Credit%20Transfers%20(RTGS).markdown) is used for high-value interbank transactions (>= 500 million VND), urgent transactions of any value, or transactions in foreign currencies.
   - [Low-value transfers (NRT ACH via NAPAS)](docs/Domestic%20Low-Value%20Interbank%20Credit%20Transfer%20(Near%20Real-Time%20ACH).markdown) is used for low-value interbank transactions (< 500 million VND).
-  - Deferred Net Settlement (DNS; or sometimes mentioned as Designated Time Net Settlement DTNS) is used for recurring, one-to-many payments like salaries or supplier payments.
+  - [Deferred Net Settlement (DNS; or sometimes mentioned as Designated Time Net Settlement DTNS)](docs/Domestic%20Batch%20Interbank%20Credit%20Transfers%20(DNS).markdown) is used for recurring, one-to-many payments like salaries or supplier payments.
+- The final settlement model is Real-Time Net Settlement (RTNS) or Real-Time Final Settlement (RTFS) is not applicable in Vietnam.
 
+### Messaging Standards
+- SWIFT MT standard
+- ISO 20022/SWIFT MX standard
+- ISO 8583 standard
+
+### Payment Risks and Mitigation Methods
+- 6 types of risks are: settlement, liquidity, systemic, Herstatt, operational, and legal risks.
+- 24 principles to mitigate risks.
+- 9 mitigation actions
+  - Proper selection of the direct participants
+  - Net Debit Cap
+  - Novation
+  - Intraday Liquidity Arrangement
+  - Collateral Requirement
+  - Loss-sharing Arrangement
+  - Third-party Guarantee
+  - ISDA Master Agreement
+  - Market Infrastructure Resiliency Service (MIRS)
 
 ## Companion Medium series
 This repository pairs with a Medium article series, [Decoding Banking’s AI Shift: Non-Banker Learns Bank Out Loud](https://medium.com/@tungt3.pmp/decoding-bankings-ai-shift-non-banker-learns-bank-out-loud-2a88faadfb1d), where I explore how AI is transforming banking, from synthetic identity fraud to credit scoring and risk detection.
