@@ -12,7 +12,7 @@ These are the payment flows that will be discussed in this repository.
 - [High-value or urgent or foreign-currency transfers (RTGS via NIEPS)](docs/Domestic%20High-Value%20Interbank%20Credit%20Transfers%20(RTGS).markdown)
 - [Low-value transfers (NRT ACH via NAPAS)](docs/Domestic%20Low-Value%20Interbank%20Credit%20Transfers%20(Near%20Real-Time%20ACH).markdown)
 - [Batch credit transfers or push transactions (DNS via NAPAS)](docs/Domestic%20Batch%20Interbank%20Credit%20Transfers%20(DNS).markdown)
-- Batch debit transfers or pull transactions (DNS via NAPAS)
+- [Batch debit transfers or pull transactions (DNS via NAPAS)](docs/Domestic%20Batch%20Interbank%20Debit%20Transfers%20(Pull%20Transactions).markdown)
 - QR Code Payments: Consumer-to-Consumer
 - QR Code Payments: Consumer-to-Merchant
 
