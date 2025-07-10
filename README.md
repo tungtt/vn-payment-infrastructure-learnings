@@ -81,8 +81,8 @@ These are the payment flows that will be discussed in this repository.
 - The final settlement model is Real-Time Net Settlement (RTNS) or Real-Time Final Settlement (RTFS) is not applicable in Vietnam.
 
 ### Messaging Standards
-- SWIFT MT standard
-- ISO 20022/SWIFT MX standard
+- SWIFT proprietary standard (MT messages)
+- (SWIFT) ISO 20022 standard (MX messages)
 - ISO 8583 standard
 
 ### Payment Risks and Mitigation Methods
