@@ -13,8 +13,7 @@ These are the payment flows that will be discussed in this repository.
 - [Low-value transfers (NRT ACH via NAPAS)](docs/Domestic%20Low-Value%20Interbank%20Credit%20Transfers%20(Near%20Real-Time%20ACH).markdown)
 - [Batch credit transfers or push transactions (DNS via NAPAS)](docs/Domestic%20Batch%20Interbank%20Credit%20Transfers%20(DNS).markdown)
 - [Batch debit transfers or pull transactions (DNS via NAPAS)](docs/Domestic%20Batch%20Interbank%20Debit%20Transfers%20(Pull%20Transactions).markdown)
-- QR Code Payments: Consumer-to-Consumer
-- QR Code Payments: Consumer-to-Merchant
+- [QR Code Payments: Consumer-to-Consumer (C2C) & Consumer-to-Merchant (C2M)](docs/Domestic%20QR%20Code%20Payment%20-%20Consumer-to-Consumer%20-%20Consumer-to-Merchant.markdown)
 
 ### 2. Cross-border Payments
 - SWIFT transfers
@@ -83,6 +82,7 @@ These are the payment flows that will be discussed in this repository.
 ### Messaging Standards
 - SWIFT proprietary standard (MT messages)
 - (SWIFT) ISO 20022 standard (MX messages)
+- EMVCo QR Code standard
 - ISO 8583 standard
 
 ### Payment Risks and Mitigation Methods
